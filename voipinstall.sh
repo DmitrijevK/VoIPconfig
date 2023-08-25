@@ -47,7 +47,7 @@ menu()
 	read -p "Пожалуйста, введите пункт меню:" case
 	case $case in
 		1) asterisk;;   
-    2) pbx;;   
+                2) pbx;;   
 		0) exit;;
 	esac
 }
