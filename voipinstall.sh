@@ -58,8 +58,18 @@ asterisk()
 	clear
 	Info
 	log_t "Инсталяция"
-  apt isntall
-  cd /etc/asterisk
+	timedatectl set-timezone Europe/Moscow
+ 	apt install chrony
+  	systemctl enable chrony --now
+   	echo "Configure FireWall"
+   	iptables -I INPUT -p tcp --match multiport --dports 5060,5061 -j ACCEPT
+    	iptables -I INPUT -p udp --match multiport --dports 5060,5061 -j ACCEPT
+     	iptables -I INPUT -p tcp --match multiport --dports 80,443 -j ACCEPT
+      	iptables -I INPUT -p udp --dport 10000:20000 -j ACCEPT
+       	apt install iptables-persistent
+	netfilter-persistent save
+ 	useradd asterisk -m
+
 }
 asterisk
 
@@ -67,9 +77,16 @@ pbx()
 {
 	clear
 	Info
-	log_t "VDS настройки и конфигурации"
-  apt-get update
-  apt -y Asterisk
-
+	echo "Configure WebServer "
+	apt install mariadb-server
+ 	systemctl enable mariadb --now
+ 	mysqladmin -u root password
+  	echo "NGINX Configure"
+   	apt isntall nginx
+	echo "client_max_body_size 128M;" | sudo tee -a /etc/nginx/nginx.conf > /dev/null
+	systemctl enable nginx
+	systemctl restart nginx
+ 	apt install php php-fpm php-bcmath php-gd php-json php-mbstring php-mysqlnd php-pear php-snmp php-zip php-curl php-xml
+  	systemctl disable apache2
 }
 pbx
